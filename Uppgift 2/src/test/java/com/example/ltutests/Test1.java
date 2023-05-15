@@ -55,8 +55,8 @@ public class Test1 {
             JsonNode jsonNode = objectMapper.readTree(jsonFile);
 
             // Extracts userid and password from the parsed JSON
-            userid = jsonNode.get("LTUCredentials").get("userid").asText();
-            password = jsonNode.get("LTUCredentials").get("password").asText();
+            userid = jsonNode.get("ltuCredentials").get("email").asText();
+            password = jsonNode.get("ltuCredentials").get("password").asText();
         } catch (
                 IOException e) {
             // Prints the stack trace in case of IOException
