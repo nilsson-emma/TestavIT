@@ -27,21 +27,22 @@ public class Test3 {
     @Test
     //COMMON CODE FOR TEST 2 AND 3
     public void DownloadTranscript() {
-        //Set the path to the ChromeDriver
+        //Selenide:
+        Configuration.browser = "chrome";
+        Configuration.browserCapabilities.setCapability("disableNotifications", true);
+        //Configuration.browserCapabilities.setCapability("remote-allow-origins", "*");
+
+        //Selenium:
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("--disable-notifications");
         options.addArguments("--remote-allow-origins=*");
 
-        //Instansiate a new WebDriver-instans (wrapper)
-        WebDriver driver = new ChromeDriver(options);
+        //WebDriverRunner är Selenide. ChromeDriver(options) är Selenium.
+        WebDriverRunner.setWebDriver(new ChromeDriver(options)); // Set up the WebDriver
 
-        // Set the WebDriver instance to Selenide
-        WebDriverRunner.setWebDriver(driver);
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+        //Resterande är Selenide:
         // Navigate to LTU
         open("https://www.ltu.se/");
+        WebDriverRunner.getWebDriver().manage().window().maximize();
 
         // Accept cookies by clicking on the button.
         $("button#CybotCookiebotDialogBodyButtonDecline").click();

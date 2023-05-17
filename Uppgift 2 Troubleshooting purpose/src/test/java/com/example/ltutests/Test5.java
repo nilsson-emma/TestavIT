@@ -1,6 +1,8 @@
 package com.example.ltutests;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.internal.shadowed.jackson.databind.JsonNode;
 import io.qameta.allure.internal.shadowed.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -20,18 +22,22 @@ import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 public class Test5 {
     @Test
     public void Logout() {
+        //Selenide:
+        Configuration.browser = "chrome";
+        Configuration.browserCapabilities.setCapability("disableNotifications", true);
+        //Configuration.browserCapabilities.setCapability("remote-allow-origins", "*");
+
+        //Selenium:
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("--disable-notifications");
         options.addArguments("--remote-allow-origins=*");
 
-        WebDriver driver = new ChromeDriver(options);
+        //WebDriverRunner är Selenide. ChromeDriver(options) är Selenium.
+        WebDriverRunner.setWebDriver(new ChromeDriver(options)); // Set up the WebDriver
 
-        // Set the WebDriver instance to Selenide
-        setWebDriver(driver);
-
-        // Opens the web page of ltu.se
-        driver.get("https://www.ltu.se/student");
+        //Resterande är Selenide:
+        // Navigate to LTU
+        open("https://www.ltu.se/");
+        WebDriverRunner.getWebDriver().manage().window().maximize();
 
         // Finds a specific element by xpath and click it
         $("html > body > main > div > div > div:nth-of-type(1) > div > div:nth-of-type(1) > div > div > div:nth-of-type(3) > a").click();

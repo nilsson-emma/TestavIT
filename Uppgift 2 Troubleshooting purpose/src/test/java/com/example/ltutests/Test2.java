@@ -25,34 +25,24 @@ import java.io.IOException;
         @Test
         public void CreateTranscript() {
             //COMMON CODE FOR TEST 2 AND 3
-/*          Selenium:
-            //Set the path to the ChromeDriver
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("start-maximized");
-            options.addArguments("--disable-notifications");
-            options.addArguments("--remote-allow-origins=*");
 
-            //Instansiate a new WebDriver-instans (wrapper)
-            WebDriver driver = new ChromeDriver(options);
-
-            // Set the WebDriver instance to Selenide
-            WebDriverRunner.setWebDriver(driver);
-*/
             //Selenide:
             Configuration.browser = "chrome";
-            //Configuration.startMaximized = true;
             Configuration.browserCapabilities.setCapability("disableNotifications", true);
             //Configuration.browserCapabilities.setCapability("remote-allow-origins", "*");
 
-            //Selenium
+            //Selenium:
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--remote-allow-origins=*");
-            options.addArguments("start-maximized");
+            //Brief additional info about the remote allow origins: https://chromedriver.chromium.org/security-considerations
 
+            //WebDriverRunner är Selenide. ChromeDriver(options) är Selenium.
             WebDriverRunner.setWebDriver(new ChromeDriver(options)); // Set up the WebDriver
 
+            //Resterande är Selenide:
             // Navigate to LTU
             open("https://www.ltu.se/");
+            WebDriverRunner.getWebDriver().manage().window().maximize();
 
             // Accept cookies by clicking on the button.
             $("button#CybotCookiebotDialogBodyButtonDecline").click();
