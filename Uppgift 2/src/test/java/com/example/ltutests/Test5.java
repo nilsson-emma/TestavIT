@@ -1,36 +1,24 @@
 package com.example.ltutests;
 
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.internal.shadowed.jackson.databind.JsonNode;
 import io.qameta.allure.internal.shadowed.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
 import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 
 
 //Log out from LTU
 public class Test5 {
     @Test
     public void Logout() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("--disable-notifications");
-        options.addArguments("--remote-allow-origins=*");
-
-        WebDriver driver = new ChromeDriver(options);
-
-        // Set the WebDriver instance to Selenide
-        setWebDriver(driver);
-
-        // Opens the web page of ltu.se
-        driver.get("https://www.ltu.se/student");
+        // Navigate to LTU
+        open("https://www.ltu.se/");
+        WebDriverRunner.getWebDriver().manage().window().maximize();
 
         // Finds a specific element by xpath and click it
         $("html > body > main > div > div > div:nth-of-type(1) > div > div:nth-of-type(1) > div > div > div:nth-of-type(3) > a").click();
@@ -56,13 +44,13 @@ public class Test5 {
         }
 
         // Enters userid and password in their respective fields
-        WebElement useridTextField = $("input[id='username']");
+        SelenideElement useridTextField = $("input[id='username']");
         useridTextField.sendKeys (userid);
-        WebElement passwordTextField = $("input[id='password']");
+        SelenideElement passwordTextField = $("input[id='password']");
         passwordTextField.sendKeys (password);
 
         // Finds and clicks on the login button
-        WebElement loginButton = $("input[class='btn-submit']");
+        SelenideElement loginButton = $("input[class='btn-submit']");
         loginButton.click();
 
         // Find the drop-down element that contains Log out.

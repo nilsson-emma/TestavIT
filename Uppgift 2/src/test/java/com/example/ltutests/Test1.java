@@ -1,55 +1,39 @@
 package com.example.ltutests;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
-
 import com.codeborne.selenide.Configuration;
-
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.internal.shadowed.jackson.databind.JsonNode;
 import io.qameta.allure.internal.shadowed.jackson.databind.ObjectMapper;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
 import org.junit.jupiter.api.*;
-
 import java.io.File;
 import java.io.IOException;
 
 
-//Retrieve final examination information
+//Test for retrieving final examination information
 public class Test1 {
     @Test
     public void ExaminationInformation() {
 
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("--disable-notifications");
-        options.addArguments("--remote-allow-origins=*");
+        // Navigate to the LTU student web page
+        open("https://www.ltu.se/student");
+        WebDriverRunner.getWebDriver().manage().window().maximize();
 
-        WebDriver driver = new ChromeDriver(options);
+        // Accept cookies by clicking on the button.
+        $("button#CybotCookiebotDialogBodyButtonDecline").click();
 
-        // Sett the WebDriver instance to Selenide
-        setWebDriver(driver);
-
-        // Opens the web page of ltu.se
-        driver.get("https://www.ltu.se/student");
-
-        // Finds a specific element by xpath and click it
-        driver.findElement(By.xpath("/html/body/main/div/div/div[1]/div/div[1]/div/div/div[3]/a")).click();
+        //Locate and click the first login button
+        $("a[class^='button']").click();
 
         // Loads the JSON file containing login credentials
         File jsonFile = new File("C:\\temp\\ltu.json");
 
-        //// Initializes userid and password as null
+        // Initializes userid and password as null
         String userid = null;
         String password = null;
 
-        // Reads and parse the JSON file to extract login credentials
+        // Reads and parses the JSON file to extract login credentials
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonFile);
@@ -57,45 +41,45 @@ public class Test1 {
             // Extracts userid and password from the parsed JSON
             userid = jsonNode.get("ltuCredentials").get("email").asText();
             password = jsonNode.get("ltuCredentials").get("password").asText();
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             // Prints the stack trace in case of IOException
             e.printStackTrace();
         }
 
         // Enters userid and password in their respective fields
-        WebElement useridTextField = $("input[id='username']");
+        SelenideElement useridTextField = $("input[id='username']");
         useridTextField.sendKeys (userid);
-        WebElement passwordTextField = $("input[id='password']");
+        SelenideElement passwordTextField = $("input[id='password']");
         passwordTextField.sendKeys (password);
 
-        // Fimds and clicks on the login button
-        WebElement loginButton = $("input[class='btn-submit']");
+        // Finds and clicks on the login button
+        SelenideElement loginButton = $("input[class='btn-submit']");
         loginButton.click();
 
+
         //Finds and clicks the tentamen element
-        WebElement tentamen = $("a[id$='261']");
+        SelenideElement tentamen = $("a[id$='261']");
         tentamen.click();
 
         //Finds and clicks the element tentamensschema
-        WebElement tentamensschema = $x("//a[@href='https://tenta.ltu.se/index.jsp']");
+        SelenideElement tentamensschema = $x("//a[@href='https://tenta.ltu.se/index.jsp']");
         tentamensschema.click();
 
         //Switches to newly opened tab
         switchTo().window(1);
         //Finds and clicks the webelement search
-        WebElement search = $x("//*[@id='enkel_sokfalt']");
+        SelenideElement search = $x("//*[@id='enkel_sokfalt']");
         search.click();
         //Enters "I0015N" in the search field and hits RETURN
-        search.sendKeys("I0015N");
-        search.sendKeys(Keys.RETURN);
+        search.setValue("I0015N");
+        search.pressEnter();
 
         //Finds and clicks the sokschema button
-        WebElement sokschema = $x("//*[@id=\"enkel_sokknapp\"]");
+        SelenideElement sokschema = $x("//*[@id=\"enkel_sokknapp\"]");
         sokschema.click();
 
         //Finds and clicks the webelement course
-        WebElement course = $x("//*[@id=\"enkel_resultat\"]/ul/li[1]/table/tbody/tr/td[2]/a");
+        SelenideElement course = $x("//*[@id=\"enkel_resultat\"]/ul/li[1]/table/tbody/tr/td[2]/a");
         course.click();
 
         //Switches to newly opened tab
@@ -104,7 +88,7 @@ public class Test1 {
         // Verifies the exam date
         try {
             // Gets the text of the element containing the exam date
-            WebElement examDate = $x("//tr[contains(., '30 Maj')]");
+            SelenideElement examDate = $x("//tr[contains(., '30 Maj')]");
 
             String dateText = examDate.getText();
 

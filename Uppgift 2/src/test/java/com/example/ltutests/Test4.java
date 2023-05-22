@@ -1,31 +1,19 @@
 package com.example.ltutests;
 
+import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.Test;
-
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
 import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.sleep;
-import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 
-//Download course syllabus
+
+//Test for downloading course syllabus
 public class Test4 {
     @Test
     public void DownloadSyllabus() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.addArguments("--disable-notifications");
-        options.addArguments("--remote-allow-origins=*");
 
-        var driver = new ChromeDriver(options);
-
-        // Sett the WebDriver instance to Selenide
-        setWebDriver(driver);
-
-        // Opens the course plan web page of ltu.se
-        driver.get("https://www.ltu.se/edu/course/I00/I0015N/I0015N-Test-av-IT-system-1.81215?kursView=kursplan");
+        open("https://www.ltu.se/edu/course/I00/I0015N/I0015N-Test-av-IT-system-1.81215?kursView=kursplan");
+        WebDriverRunner.getWebDriver().manage().window().maximize();
 
         // locate the cookie button
         SelenideElement cookie;
@@ -37,9 +25,9 @@ public class Test4 {
         vt23.click();
         sleep(1000);
 
+        //Downloads the course syllabus PDF
         SelenideElement download;
         try {
-            // File testAvItSyllabus = $("a.utbplan-pdf-link").download();
             download = $("a.utbplan-pdf-link");
             download.click();
             sleep(3000);
